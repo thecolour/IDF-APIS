@@ -1,0 +1,117 @@
+---
+swagger: "2.0"
+info:
+  title: IDF Registration
+  description: Registration service. Currently Restricted to registring B2B2E journeys
+    pre quote. Other journeys will be added in new versions of this API
+  contact:
+    email: tom.redfern@aldautomotive.com
+  version: "1.0"
+schemes:
+- http
+paths:
+  /register:
+    post:
+      summary: Registers an website user
+      description: Registers a website user. Supports B2B2E and B2C sales channels.
+        Supports pre-and-post-quote registration.
+      operationId: aldint-api-register
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: registrationInput
+        in: body
+        description: Registration input
+        schema:
+          $ref: '#/definitions/RegistrationInputType'
+      responses:
+        200:
+          description: User registered
+        400:
+          description: Invalid input
+        409:
+          description: Not a valid employee
+        500:
+          description: Internal service problem. Do not retry call.
+        503:
+          description: Internal service problem. Retrying of call is allowed.
+  /validateCaptcha:
+    post:
+      summary: Validates a captcha
+      description: Validates a Captcha
+      operationId: aldint-api-validateCaptcha
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: validateCaptchaInput
+        in: body
+        description: Validates Captcha input
+        schema:
+          $ref: '#/definitions/ValidateCaptchaInputType'
+      responses:
+        200:
+          description: ReCaptcha token is valid
+        409:
+          description: ReCaptcha token not valid
+        500:
+          description: Internal service problem. Do not retry call.
+        503:
+          description: Internal service problem. Retrying of call is allowed.
+definitions:
+  RegistrationInputType:
+    required:
+    - emailAddress
+    - password
+    - confirmPassword
+    - title
+    - firstName
+    - lastName
+    - validateAsEmployee
+    type: object
+    properties:
+      emailAddress:
+        type: string
+      password:
+        type: string
+      confirmPassword:
+        type: string
+      title:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      phoneNumber:
+        type: string
+      dateOfBirth:
+        type: string
+      mobileNumber:
+        type: string
+      contactByEmail:
+        default: true
+        type: boolean
+      contactBySms:
+        default: false
+        type: boolean
+      contactByPost:
+        default: false
+        type: boolean
+      contactByTelephone:
+        default: false
+        type: boolean
+      quoteReference:
+        description: For post-quote registration, the quote reference. If left blank
+          the service assumed pre-quote registration request.
+        type: string
+      validateAsEmployee:
+        description: Flag which tells the service whether the registration requires
+          requires validation as an employee. Defaults to true.
+        default: true
+        type: boolean
+  ValidateCaptchaInputType:
+    description: The ReCaptcha token
+    type: string
