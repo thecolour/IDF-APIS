@@ -4,7 +4,7 @@ info:
   title: IDF Quotes
   description: Service to create and manage quotes
   contact:
-    email: tom.redfern@aldautomotive.com
+    email: tom.redfern@gmail.com
   version: "0.1"
 schemes:
 - https
