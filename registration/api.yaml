@@ -5,7 +5,7 @@ info:
   description: Registration service. Currently Restricted to registring B2B2E journeys
     pre quote. Other journeys will be added in new versions of this API
   contact:
-    email: tom.redfern@aldautomotive.com
+    email: tom.redfern@gmail.com
   version: "1.0"
 schemes:
 - http
