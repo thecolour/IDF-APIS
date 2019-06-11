@@ -1,0 +1,119 @@
+---
+swagger: "2.0"
+info:
+  title: ContentManagement
+  description: Exposes operations for the creation and retrieval of content management
+    data
+  version: 1.0.1
+schemes:
+- https
+- http
+paths:
+  /contentmanagement/:
+    post:
+      summary: Saves one or more content items.
+      description: Semantic is UPSERT (insert if does not exist, else update)
+      operationId: aldint-api-post-contentItems
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: items
+        in: body
+        required: true
+        schema:
+          type: array
+          items:
+            $ref: '#/definitions/contentItem'
+      responses:
+        200:
+          description: Content updated
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/contentItem'
+        201:
+          description: Content created
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/contentItem'
+        400:
+          description: Some content items were invalid
+        500:
+          description: Internal service problem. Do not retry call.
+        503:
+          description: Internal service problem. Retrying of call is allowed.
+  /contentmanagement/{language}/query:
+    post:
+      summary: Returns a collection of content items by language and container
+      operationId: aldint-api-get-byContainer
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: language
+        in: path
+        required: true
+        type: string
+      - name: container
+        in: body
+        description: A list of containers for which content items are required
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Content items found
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/contentItem'
+        400:
+          description: No content items found
+        404:
+          description: No content items found
+        500:
+          description: Internal service problem. Do not retry call.
+        503:
+          description: Internal service problem. Retrying of call is allowed.
+definitions:
+  contentItem:
+    description: A content management item
+    required:
+    - language
+    - container
+    - key
+    - type
+    - value
+    type: object
+    properties:
+      language:
+        description: The ISO language code
+        type: string
+      container:
+        description: Describes where the content item will be used. Also known as
+          a Resource Set, a way of grouping content items for a page, a UI component
+          within a page, or a UI component spanning multiple pages
+        type: string
+      key:
+        description: The name of the content item within the context of a container
+        type: string
+      type:
+        description: Describes what the content item is
+        enum:
+        - Numeric
+        - Text
+        - DateTime
+        - Url
+        - Wipl
+        - Faq
+        - Help
+        type: string
+      value:
+        description: The actual content of the content item
+        type: string
